@@ -30,7 +30,7 @@
         android:layout_marginTop="84dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="City Name"
+        android:text=".................."
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:id="@+id/temperatureTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temperature"
+        android:text="Temperature: "
         android:textSize="24sp"
         android:textColor="#FFFFFF"
         android:layout_marginTop="16dp"
@@ -101,19 +101,19 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <ImageButton
-        android:id="@+id/mapButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/map_image"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/select_location"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"
-        />
+<!--    <ImageButton-->
+<!--        android:id="@+id/mapButton"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:src="@drawable/map_image"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--        android:contentDescription="@string/select_location"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_margin="16dp"-->
+<!--        />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

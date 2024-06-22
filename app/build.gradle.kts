@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pmdweather"
+    namespace = "com.pmdweather"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pmdweather"
+        applicationId = "com.pmdweather"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -37,6 +37,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.play.services.tasks)
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Unit testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
