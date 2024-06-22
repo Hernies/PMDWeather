@@ -21,5 +21,14 @@ public interface OpenWeatherApi {
             @Query("start_date") String end_date,
             @Query("hourly") String current
     );
+
+    @GET("v1/forecast")
+    Call<Weather> getWeeklyWeatherData(
+            @Query("latitude") double latitude,
+            @Query("longitude") double longitude,
+            @Query("start_date") String start_date,
+            @Query("start_date") String end_date,
+            @Query("daily") String current
+    );
 }
 

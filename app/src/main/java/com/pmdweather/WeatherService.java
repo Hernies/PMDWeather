@@ -9,7 +9,7 @@ public class WeatherService {
 
     private static final String BASE_URL = "https://api.open-meteo.com/";
 
-    private OpenWeatherApi openWeatherApi;
+    private final OpenWeatherApi openWeatherApi;
 
     public WeatherService() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -25,6 +25,11 @@ public class WeatherService {
         return openWeatherApi.getCurrentWeatherData(latitude, longitude, currentParams);
     }
     public Call<Weather> getHourlyWeather(double latitude, double longitude, Date startDate, Date endDate){
+        String hourlyParams = "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code";
+        return openWeatherApi.getHourlyWeatherData(latitude,longitude,startDate.toString(),endDate.toString(),hourlyParams);
+    }
+
+    public Call<Weather> getWeeklyWeather(double latitude, double longitude, Date startDate, Date endDate){
         String hourlyParams = "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code";
         return openWeatherApi.getHourlyWeatherData(latitude,longitude,startDate.toString(),endDate.toString(),hourlyParams);
     }

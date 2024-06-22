@@ -433,4 +433,145 @@ public class Weather {
             this.windSpeed10m = windSpeed10m;
         }
     }
+
+    public static class WeeklyUnits {
+
+        @SerializedName("time")
+        private String time;
+
+        @SerializedName("weather_code")
+        private String weatherCode;
+
+        @SerializedName("temperature_2m_max")
+        private String temperature2mMax;
+
+        @SerializedName("temperature_2m_min")
+        private String temperature2mMin;
+
+        @SerializedName("apparent_temperature_max")
+        private String apparentTemperatureMax;
+
+        @SerializedName("apparent_temperature_min")
+        private String apparentTemperatureMin;
+
+        // Getters and Setters
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
+
+        public String getWeatherCode() {
+            return weatherCode;
+        }
+
+        public void setWeatherCode(String weatherCode) {
+            this.weatherCode = weatherCode;
+        }
+
+        public String getTemperature2mMax() {
+            return temperature2mMax;
+        }
+
+        public void setTemperature2mMax(String temperature2mMax) {
+            this.temperature2mMax = temperature2mMax;
+        }
+
+        public String getTemperature2mMin() {
+            return temperature2mMin;
+        }
+
+        public void setTemperature2mMin(String temperature2mMin) {
+            this.temperature2mMin = temperature2mMin;
+        }
+
+        public String getApparentTemperatureMax() {
+            return apparentTemperatureMax;
+        }
+
+        public void setApparentTemperatureMax(String apparentTemperatureMax) {
+            this.apparentTemperatureMax = apparentTemperatureMax;
+        }
+
+        public String getApparentTemperatureMin() {
+            return apparentTemperatureMin;
+        }
+
+        public void setApparentTemperatureMin(String apparentTemperatureMin) {
+            this.apparentTemperatureMin = apparentTemperatureMin;
+        }
+    }
+
+    public static class Weekly {
+
+        @SerializedName("time")
+        private List<String> time;
+
+        @SerializedName("weather_code")
+        private List<Integer> weatherCode;
+
+        @SerializedName("temperature_2m_max")
+        private List<Double> temperature2mMax;
+
+        @SerializedName("temperature_2m_min")
+        private List<Double> temperature2mMin;
+
+        @SerializedName("apparent_temperature_max")
+        private List<Double> apparentTemperatureMax;
+
+        @SerializedName("apparent_temperature_min")
+        private List<Double> apparentTemperatureMin;
+
+        // Getters and Setters
+        public List<String> getTime() {
+            return time;
+        }
+
+        public void setTime(List<String> time) {
+            this.time = time;
+        }
+
+        public List<Integer> getWeatherCode() {
+            return weatherCode;
+        }
+
+        public void setWeatherCode(List<Integer> weatherCode) {
+            this.weatherCode = weatherCode;
+        }
+
+        public List<Double> getTemperature2mMax() {
+            return temperature2mMax;
+        }
+
+        public void setTemperature2mMax(List<Double> temperature2mMax) {
+            this.temperature2mMax = temperature2mMax;
+        }
+
+        public List<Double> getTemperature2mMin() {
+            return temperature2mMin;
+        }
+
+        public void setTemperature2mMin(List<Double> temperature2mMin) {
+            this.temperature2mMin = temperature2mMin;
+        }
+
+        public List<Double> getApparentTemperatureMax() {
+            return apparentTemperatureMax;
+        }
+
+        public void setApparentTemperatureMax(List<Double> apparentTemperatureMax) {
+            this.apparentTemperatureMax = apparentTemperatureMax;
+        }
+
+        public List<Double> getApparentTemperatureMin() {
+            return apparentTemperatureMin;
+        }
+
+        public void setApparentTemperatureMin(List<Double> apparentTemperatureMin) {
+            this.apparentTemperatureMin = apparentTemperatureMin;
+        }
+    }
+
 }
