@@ -1,11 +1,13 @@
-package com.pmdweather;
+package com.pmdweather.api;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
 
 
-public class Weather {
+public class Weather implements Serializable {
 
     @SerializedName("latitude")
     private Double latitude;
@@ -33,6 +35,19 @@ public class Weather {
 
     @SerializedName("current")
     private Current current;
+    
+    @SerializedName("hourly")
+    private Hourly hourly;
+
+    @SerializedName("hourly_units")
+    private HourlyUnits hourlyUnits;
+
+    @SerializedName("weekly")
+    private Weekly weekly;
+
+    @SerializedName("weekly_units")
+    private WeeklyUnits weeklyUnits;
+
 
     // Getters and Setters
     public Double getLatitude() {
@@ -107,7 +122,15 @@ public class Weather {
         this.current = current;
     }
 
-    public static class CurrentUnits {
+    public Hourly getHourly() {return hourly;}
+    
+    public HourlyUnits getHourlyUnits() {return hourlyUnits;}
+
+    public Weekly getWeekly() {return weekly;}
+
+    public WeeklyUnits getWeeklyUnits() {return weeklyUnits;}
+
+    public static class CurrentUnits implements Serializable {
 
         @SerializedName("time")
         private String time;
@@ -210,7 +233,7 @@ public class Weather {
         }
     }
 
-    public static class Hourly {
+    public static class Hourly implements Serializable{
 
         @SerializedName("time")
         private List<String> time;
@@ -269,7 +292,7 @@ public class Weather {
         }
     }
 
-    public static class HourlyUnits {
+    public static class HourlyUnits implements Serializable{
 
         @SerializedName("time")
         private String time;
@@ -328,7 +351,7 @@ public class Weather {
         }
     }
 
-    public static class Current {
+    public static class Current implements Serializable{
 
         @SerializedName("time")
         private String time;
@@ -434,7 +457,7 @@ public class Weather {
         }
     }
 
-    public static class WeeklyUnits {
+    public static class WeeklyUnits implements Serializable{
 
         @SerializedName("time")
         private String time;
@@ -504,7 +527,7 @@ public class Weather {
         }
     }
 
-    public static class Weekly {
+    public static class Weekly implements Serializable{
 
         @SerializedName("time")
         private List<String> time;

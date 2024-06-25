@@ -1,4 +1,4 @@
-package com.pmdweather;
+package com.pmdweather.api;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,18 +17,25 @@ public interface OpenWeatherApi {
     Call<Weather> getHourlyWeatherData(
             @Query("latitude") double latitude,
             @Query("longitude") double longitude,
-            @Query("start_date") String start_date,
-            @Query("start_date") String end_date,
-            @Query("hourly") String current
+            @Query("hourly") String hourly
     );
 
     @GET("v1/forecast")
     Call<Weather> getWeeklyWeatherData(
             @Query("latitude") double latitude,
             @Query("longitude") double longitude,
-            @Query("start_date") String start_date,
-            @Query("start_date") String end_date,
-            @Query("daily") String current
+            @Query("daily") String daily
+    );
+
+    @GET("v1/forecast")
+    Call<Weather> getAllWeatherData(
+            @Query("latitude") double latitude,
+            @Query("longitude") double longitude,
+            @Query("forecast_days") int forecast_days,
+            @Query("past_days") int past_days,
+            @Query("current") String current,
+            @Query("hourly") String hourly,
+            @Query("daily") String daily
     );
 }
 
