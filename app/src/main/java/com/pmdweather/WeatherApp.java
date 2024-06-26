@@ -18,6 +18,10 @@ public class WeatherApp extends Application {
             startApiService();
             startDataBaseService();
     }
+    private void startLocationService() {
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
+    }
     private void startApiService(){
         Intent intent = new Intent (this, ApiService.class);
         startService(intent);
@@ -26,10 +30,7 @@ public class WeatherApp extends Application {
         Intent intent = new Intent (this, DatabaseService.class);
         startService(intent);
     }
-    private void startLocationService() {
-        Intent intent = new Intent(this, LocationService.class);
-        startService(intent);
-    }
+
 
 
 }

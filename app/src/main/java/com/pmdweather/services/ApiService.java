@@ -35,6 +35,7 @@ public class ApiService extends Service{
         weatherCaller = new WeatherCall();
         IntentFilter filter = new IntentFilter("com.pmdweather.LOCATION_UPDATE");
         registerReceiver(locationUpdateReceiver, filter);
+        System.out.println("api Started");
     }
     private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -42,6 +43,7 @@ public class ApiService extends Service{
             double latitude = intent.getDoubleExtra("latitude", 0.0);
             double longitude = intent.getDoubleExtra("longitude", 0.0);
             fetchWeatherData(latitude, longitude);
+            
         }
     };
 
@@ -72,7 +74,7 @@ public class ApiService extends Service{
     private void sendWeatherUpdateBroadcast(Weather weather) {
         Intent intent = new Intent(ACTION_WEATHER_UPDATE);
         intent.putExtra(EXTRA_WEATHER_DATA, weather);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     @Override

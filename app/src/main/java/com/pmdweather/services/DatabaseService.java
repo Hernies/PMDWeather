@@ -20,8 +20,8 @@ public class DatabaseService extends Service {
         weatherDAO = new WeatherDAO(this);
         weatherDAO.open();
         IntentFilter filter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
-
         LocalBroadcastManager.getInstance(this).registerReceiver(weatherUpdateReceiver, filter);
+        System.out.println("Database Started");
     }
 
     private final BroadcastReceiver weatherUpdateReceiver = new BroadcastReceiver() {

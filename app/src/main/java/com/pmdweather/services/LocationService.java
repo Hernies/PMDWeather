@@ -25,7 +25,7 @@ public class LocationService extends Service{
     }
     public void setLocation(Location location){
         this.location = location;
-        System.out.println("Location:"+ location.toString());
+        System.out.println("Location: "+ location.toString());
     }
 
     @Override
@@ -54,6 +54,7 @@ public class LocationService extends Service{
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
+        System.out.println("Location Started");
     }
 
     @Override
