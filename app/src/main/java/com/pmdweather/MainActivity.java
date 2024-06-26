@@ -153,8 +153,10 @@ import java.time.LocalTime;
         // weather.getCurrent().getWeatherCode()
 
         // Icono Weather
-        ImageView weatherImageView = findViewById(R.id.weatherImageView);
-        weatherImageView.setBackground(setImageFromImageCode(weatherData.getCurrent().getWeatherCode()));
+        System.out.println("weatherCode: "+ weatherData.getCurrent().getWeatherCode());
+//        int weathercode = weatherData.getCurrent().getWeatherCode();
+//        setImageFromImageCode(weathercode);
+
 
         // Info temperatura
         TextView temperatureTextView = findViewById(R.id.temperatureTextView);
@@ -241,7 +243,7 @@ import java.time.LocalTime;
             }
         }
         // establece el icono en concordancia con el weathercode recibido y al momento del dia que sea
-        private Drawable setImageFromImageCode(int imagecode){
+        private void setImageFromImageCode(int imagecode){
             ImageView weatherImageView = findViewById(R.id.weatherImageView);
             Drawable weatherImage = null;
             if (imagecode == 0) {
@@ -285,7 +287,6 @@ import java.time.LocalTime;
                     weatherImageView.setBackground(weatherImage);
                 }
             }
-            return weatherImage;
         }
 ////////
     }
