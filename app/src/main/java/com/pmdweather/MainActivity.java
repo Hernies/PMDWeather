@@ -161,8 +161,8 @@ import java.time.LocalTime;
         temperatureTextView.setText(weatherData.getCurrent().getTemperature2m() + "°C");
 
         // Info Adiccional
-        TextView humidityTextView = findViewById(R.id.humidityTextView);
-        humidityTextView.setText(weatherData.getCurrent().getRelativeHumidity2m() + "%");
+//        TextView humidityTextView = findViewById(R.id.humidityTextView);
+//        humidityTextView.setText(weatherData.getCurrent().getRelativeHumidity2m() + "%");
 
         // HorizontalScrollView y su contenedor
         LinearLayout hourlyForecastContainer = findViewById(R.id.hourlyForecastContainer);
