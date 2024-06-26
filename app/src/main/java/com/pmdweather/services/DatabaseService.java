@@ -10,14 +10,20 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.pmdweather.HistoryActivity;
 import com.pmdweather.MainActivity;
 import com.pmdweather.api.Weather;
+import com.pmdweather.db.Response;
 import com.pmdweather.db.WeatherDAO;
+import com.pmdweather.db.Request;
+
 
 import java.util.Arrays;
 
 public class DatabaseService extends Service {
-    
+
+    public static final String ACTION_RESPONSE_HISTORY = "com.pmdweather.RESPONSE_HISTORY";
+    public static final String EXTRA_RESPONSE_BODY = "com.pmdweather.RESPONSE_BODY";
     private WeatherDAO weatherDAO;
     @Override
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -27,6 +33,8 @@ public class DatabaseService extends Service {
         weatherDAO.open();
         IntentFilter filter = new IntentFilter("com.pmdweather.HISTORY_UPDATE");
         registerReceiver(updateHistoryReceiver, filter);
+        IntentFilter send = new IntentFilter("com.pmdweather.GET_HISTORY");
+
     }
 
     private final BroadcastReceiver updateHistoryReceiver = new BroadcastReceiver() {
@@ -54,10 +62,27 @@ public class DatabaseService extends Service {
         }
     };
     
+    private final BroadcastReceiver handleHistoryRequest = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(HistoryActivity.ACTION_REQUEST_HISTORY.equals(intent.getAction())){
+                Request request = (Request) intent.getSerializableExtra(HistoryActivity.EXTRA_REQUEST_BODY);
+                if (request != null){
+                    //if the request isnt null, prepare the broadcast and send over to history activity
+                    Intent response = new Intent(ACTION_RESPONSE_HISTORY);
+                    response.putExtra(EXTRA_RESPONSE_BODY,executeRequest(request));
+                }
+            }
+
+        }
+    };
+    
     private void storeWeatherData(Weather weather,String cityName){
-        System.out.println("storing ");
         weatherDAO.insertWeather(weather,cityName);
-        System.out.println("weather stored");
+    }
+    
+    private Response executeRequest(Request request){
+        return weatherDAO.executeRequest(request);
     }
 
     @Override

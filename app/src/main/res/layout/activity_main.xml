@@ -25,7 +25,7 @@
 
     <!-- Botón calendar -->
     <ImageButton
-        android:id="@+id/calendarButton"
+        android:id="@+id/buttonHistory"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/calendar"

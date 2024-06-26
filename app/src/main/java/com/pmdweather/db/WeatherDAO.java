@@ -27,6 +27,11 @@ public class WeatherDAO {
         Log.d("WeatherDAO", "Database closed");
     }
 
+    public Response executeRequest(Request request){
+        //todo exectute request and return response
+        return null;
+    }
+    
     public void insertWeather(Weather weather, String cityName) {
         long cityId = getCityId(cityName);
 

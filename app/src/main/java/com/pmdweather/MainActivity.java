@@ -6,15 +6,16 @@
     import android.content.IntentFilter;
     import android.content.pm.PackageManager;
     import android.graphics.drawable.Drawable;
+    import android.media.Image;
     import android.os.Bundle;
     import android.Manifest;
     import android.annotation.SuppressLint;
     import android.location.Address;
     import android.location.Geocoder;
     import android.view.View;
+    import android.widget.ImageButton;
     import android.widget.ImageView;
     import android.widget.TextView;
-    import android.widget.Button;
     import android.widget.Toast;
     import androidx.activity.EdgeToEdge;
     import androidx.activity.result.ActivityResultLauncher;
@@ -69,11 +70,12 @@
             }
             // set background to the time
             setBackgroundTime();
-            Button buttonHistory = findViewById(R.id.buttonHistory);
+            ImageButton buttonHistory = findViewById(R.id.buttonHistory);
             buttonHistory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //todo movernos a otra pagina
+                    Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(intent);
                 }
             });
         }
@@ -133,10 +135,6 @@
                 }
             }
         };
-        private void updateHistoryBroadcast(Weather weather, String cityName){
-
-        }
-        
 ////////
 
 //////// METER DATOS EN LA PAGINA
