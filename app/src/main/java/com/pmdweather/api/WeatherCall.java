@@ -21,7 +21,7 @@ public class WeatherCall {
     }
     
     public Call<Weather> getAllWeatherData(double latitude, double longitude, int forecast_days, int past_days){
-        String current = "temperature_2m,relative_humidity_2m,apparent_temperature";
+        String current = "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code";
         String hourly = "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code";
         String weekly = "weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min";
         return openWeatherApi.getAllWeatherData(latitude,longitude,current,hourly,weekly,forecast_days,past_days);
