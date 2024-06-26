@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-
-
 public class Weather implements Serializable {
 
     @SerializedName("latitude")
@@ -35,19 +33,18 @@ public class Weather implements Serializable {
 
     @SerializedName("current")
     private Current current;
-    
+
     @SerializedName("hourly")
     private Hourly hourly;
 
     @SerializedName("hourly_units")
     private HourlyUnits hourlyUnits;
 
-    @SerializedName("weekly")
-    private Weekly weekly;
+    @SerializedName("daily")
+    private Daily daily;
 
-    @SerializedName("weekly_units")
-    private WeeklyUnits weeklyUnits;
-
+    @SerializedName("daily_units")
+    private DailyUnits dailyUnits;
 
     // Getters and Setters
     public Double getLatitude() {
@@ -122,14 +119,39 @@ public class Weather implements Serializable {
         this.current = current;
     }
 
-    public Hourly getHourly() {return hourly;}
-    
-    public HourlyUnits getHourlyUnits() {return hourlyUnits;}
+    public Hourly getHourly() {
+        return hourly;
+    }
 
-    public Weekly getWeekly() {return weekly;}
+    public void setHourly(Hourly hourly) {
+        this.hourly = hourly;
+    }
 
-    public WeeklyUnits getWeeklyUnits() {return weeklyUnits;}
-    public static class Current implements Serializable{
+    public HourlyUnits getHourlyUnits() {
+        return hourlyUnits;
+    }
+
+    public void setHourlyUnits(HourlyUnits hourlyUnits) {
+        this.hourlyUnits = hourlyUnits;
+    }
+
+    public Daily getDaily() {
+        return daily;
+    }
+
+    public void setDaily(Daily daily) {
+        this.daily = daily;
+    }
+
+    public DailyUnits getDailyUnits() {
+        return dailyUnits;
+    }
+
+    public void setDailyUnits(DailyUnits dailyUnits) {
+        this.dailyUnits = dailyUnits;
+    }
+
+    public static class Current implements Serializable {
 
         @SerializedName("time")
         private String time;
@@ -160,8 +182,8 @@ public class Weather implements Serializable {
 
         @SerializedName("imagecode")
         private int imagecode;
+
         // Getters and Setters
-        public Integer getImagecode(){return imagecode;}
         public String getTime() {
             return time;
         }
@@ -233,7 +255,16 @@ public class Weather implements Serializable {
         public void setWindSpeed10m(Double windSpeed10m) {
             this.windSpeed10m = windSpeed10m;
         }
+
+        public int getImagecode() {
+            return imagecode;
+        }
+
+        public void setImagecode(int imagecode) {
+            this.imagecode = imagecode;
+        }
     }
+
     public static class CurrentUnits implements Serializable {
 
         @SerializedName("time")
@@ -337,7 +368,7 @@ public class Weather implements Serializable {
         }
     }
 
-    public static class Hourly implements Serializable{
+    public static class Hourly implements Serializable {
 
         @SerializedName("time")
         private List<String> time;
@@ -396,7 +427,7 @@ public class Weather implements Serializable {
         }
     }
 
-    public static class HourlyUnits implements Serializable{
+    public static class HourlyUnits implements Serializable {
 
         @SerializedName("time")
         private String time;
@@ -455,9 +486,7 @@ public class Weather implements Serializable {
         }
     }
 
-
-
-    public static class WeeklyUnits implements Serializable{
+    public static class DailyUnits implements Serializable {
 
         @SerializedName("time")
         private String time;
@@ -527,7 +556,7 @@ public class Weather implements Serializable {
         }
     }
 
-    public static class Weekly implements Serializable{
+    public static class Daily implements Serializable {
 
         @SerializedName("time")
         private List<String> time;
@@ -596,5 +625,4 @@ public class Weather implements Serializable {
             this.apparentTemperatureMin = apparentTemperatureMin;
         }
     }
-
 }

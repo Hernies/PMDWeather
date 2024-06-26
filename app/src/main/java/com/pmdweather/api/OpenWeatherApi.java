@@ -31,11 +31,11 @@ public interface OpenWeatherApi {
     Call<Weather> getAllWeatherData(
             @Query("latitude") double latitude,
             @Query("longitude") double longitude,
-            @Query("forecast_days") int forecast_days,
-            @Query("past_days") int past_days,
             @Query("current") String current,
             @Query("hourly") String hourly,
-            @Query("daily") String daily
+            @Query("daily") String daily,
+            @Query("forecast_days") int forecast_days,
+            @Query("past_days") int past_days
     );
 }
 

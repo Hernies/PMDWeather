@@ -38,6 +38,11 @@
         private Integer time;
         private Weather weatherData;
         private String cityName;
+        
+        public static final String ACTION_HISTORY_UPDATE = "com.pmdweather.HISTORY_UPDATE";
+        
+        public static final String EXTRA_HISTORY_WEATHER_DATA = "com.pmdweather.HISTORY_WEATHER_DATA";
+        public static final String EXTRA_CITY_NAME = "com.pmdweater.HISTORY_CITY_NAME";
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@
                 registerReceiver(locationUpdateReceiver, locationFilter);
                 IntentFilter weatherFilter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
                 registerReceiver(weatherUpdateReceiver,weatherFilter);
+                
             }
             // set background to the time
             setBackgroundTime();
@@ -110,10 +116,20 @@
                         // Update UI with weather data
                         weatherData = weather;
                         setValuesforPage();
+                        if (weather != null && cityName!= null){
+                            Intent history = new Intent(ACTION_HISTORY_UPDATE);
+                            history.putExtra(EXTRA_HISTORY_WEATHER_DATA, weather);
+                            history.putExtra(EXTRA_CITY_NAME,cityName);
+                            sendBroadcast(history);
+                        }
                     }
                 }
             }
         };
+        private void updateHistoryBroadcast(Weather weather, String cityName){
+
+        }
+        
 ////////
 
 //////// METER DATOS EN LA PAGINA
