@@ -1,37 +1,38 @@
     package com.pmdweather;
 
-    import android.content.BroadcastReceiver;
-    import android.content.Context;
-    import android.content.Intent;
-    import android.content.IntentFilter;
-    import android.content.pm.PackageManager;
-    import android.graphics.drawable.Drawable;
-    import android.media.Image;
-    import android.os.Bundle;
-    import android.Manifest;
-    import android.annotation.SuppressLint;
-    import android.location.Address;
-    import android.location.Geocoder;
-    import android.view.View;
-    import android.widget.ImageButton;
-    import android.widget.ImageView;
-    import android.widget.TextView;
-    import android.widget.Toast;
-    import androidx.activity.EdgeToEdge;
-    import androidx.activity.result.ActivityResultLauncher;
-    import androidx.activity.result.contract.ActivityResultContracts;
-    import androidx.appcompat.app.AppCompatActivity;
-    import androidx.core.app.ActivityCompat;
-    import androidx.core.content.ContextCompat;
-    import androidx.core.graphics.Insets;
-    import androidx.core.view.ViewCompat;
-    import androidx.core.view.WindowInsetsCompat;
-    import com.pmdweather.api.Weather;
-    import com.pmdweather.services.ApiService;
-    import java.io.IOException;
-    import java.util.List;
-    import java.util.Locale;
-    import java.time.LocalTime;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.location.Address;
+import android.location.Geocoder;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import com.pmdweather.api.Weather;
+import com.pmdweather.services.ApiService;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import java.time.LocalTime;
 
 
 
@@ -137,18 +138,64 @@
         };
 ////////
 
-//////// METER DATOS EN LA PAGINA
-        // todo introducir datos a elementos xml
-        private void setValuesforPage(){
-            //seleccionamos el elemento de texto del xml
-            TextView cityNameElement = findViewById(R.id.cityNameTextView);
-            //introducimos el nombre de la ciudad (guardado en el string cityNam)
-            cityNameElement.setText(cityName);
+    //////// METER DATOS EN LA PAGINA
+    // todo introducir datos a elementos xml
+    private void setValuesforPage() {
+        // seleccionamos el elemento de texto del xml
+        TextView cityNameElement = findViewById(R.id.cityNameTextView);
+        // introducimos el nombre de la ciudad (guardado en el string cityNam)
+        cityNameElement.setText(cityName);
 
-            //continua con el resto de elementos de la pagina
-            // empieza por los datos de temperatura y los iconos
-            // los datos estan en el objeto weather (es accesible dentro de la clase)
-            // para extraer algun dato haz por ejemplo: weather.getCurrent().getWeatherCode()
+        // continua con el resto de elementos de la pagina
+        // empieza por los datos de temperatura y los iconos
+        // los datos estan en el objeto weather (es accesible dentro de la clase)
+        // para extraer algun dato haz por ejemplo:
+        // weather.getCurrent().getWeatherCode()
+
+        // Icono Weather
+        ImageView weatherImageView = findViewById(R.id.weatherImageView);
+        weatherImageView.setBackground(setImageFromImageCode(weatherData.getCurrent().getWeatherCode()));
+
+        // Info temperatura
+        TextView temperatureTextView = findViewById(R.id.temperatureTextView);
+        temperatureTextView.setText(weatherData.getCurrent().getTemperature2m() + "°C");
+
+        // Info Adiccional
+        TextView humidityTextView = findViewById(R.id.humidityTextView);
+        humidityTextView.setText(weatherData.getCurrent().getRelativeHumidity2m() + "%");
+
+        // HorizontalScrollView y su contenedor
+        LinearLayout hourlyForecastContainer = findViewById(R.id.hourlyForecastContainer);
+
+        // Agregamos datos dinamicamente
+//        for(Weather hourlyWeather : weatherData.getHourly()){
+//            // Creamos n nuevo layout
+//            LinearLayout hourLayout= new LinearLayout(this);
+//            hourLayout.setOrientation(LinearLayout.VERTICAL);
+//            hourLayout.setPadding(10, 10, 10, 10);
+//
+//            // Creamos un nuevo TextView para la hora
+//            TextView hourTextView = new TextView(this);
+//            hourTextView.setText(hourlyWeather.getHour());
+//            hourTextView.setTextSize(16);
+//
+//            // Creamos un nuevo ImageView para el icono del clima
+//            ImageView weatherImageDynamic = new ImageView(this);
+//            weatherImageDynamic.setBackground(setImageFromImageCode(hourlyWeather.getWeatherCode()));
+//
+//            // Creamos un nuevo TextView para la temperatura
+//            TextView temperatureTextViewDynamic = new TextView(this);
+//            temperatureTextViewDynamic.setText(hourlyWeather.getTemperature() + "°C");
+//            temperatureTextViewDynamic.setTextSize(16);
+//
+//            // Agregamos los elementos al layout
+//            hourLayout.addView(hourTextView);
+//            hourLayout.addView(weatherImageDynamic);
+//            hourLayout.addView(temperatureTextViewDynamic);
+//
+//            // Agregamos el layout al contenedor
+//            hourlyForecastContainer.addView(hourLayout);
+//        }
 
         }
 ////////
@@ -194,9 +241,9 @@
             }
         }
         // establece el icono en concordancia con el weathercode recibido y al momento del dia que sea
-        private void setImageFromImageCode(int imagecode){
+        private Drawable setImageFromImageCode(int imagecode){
             ImageView weatherImageView = findViewById(R.id.weatherImageView);
-            Drawable weatherImage;
+            Drawable weatherImage = null;
             if (imagecode == 0) {
                 if( time == 2){
                     weatherImage = ContextCompat.getDrawable(this, R.drawable.clear_night);
@@ -238,6 +285,7 @@
                     weatherImageView.setBackground(weatherImage);
                 }
             }
+            return weatherImage;
         }
 ////////
     }
