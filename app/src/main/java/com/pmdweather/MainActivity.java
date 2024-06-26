@@ -254,7 +254,15 @@ import java.time.LocalTime;
                     weatherImage = ContextCompat.getDrawable(this, R.drawable.clear_day);
                     weatherImageView.setBackground(weatherImage);
                 }
-            } else if (imagecode > 44 && imagecode <= 48) {
+            } else if (imagecode > 0 && imagecode <= 3) {
+                if (time == 2) {
+                    weatherImage = ContextCompat.getDrawable(this, R.drawable.night_rain);
+                    weatherImageView.setBackground(weatherImage);
+                } else {
+                    weatherImage = ContextCompat.getDrawable(this, R.drawable.day_rain_option_2);
+                    weatherImageView.setBackground(weatherImage);
+                }
+            }else if (imagecode > 44 && imagecode <= 48) {
                 if (time == 2) {
                     weatherImage = ContextCompat.getDrawable(this, R.drawable.night_rain);
                     weatherImageView.setBackground(weatherImage);
