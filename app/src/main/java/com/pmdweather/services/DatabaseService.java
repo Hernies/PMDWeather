@@ -35,7 +35,7 @@ public class DatabaseService extends Service {
     };
     
     private void storeWeatherData(Weather weather){
-        //todo store weather
+        weatherDAO.insertWeather(weather);
     }
 
     @Override
