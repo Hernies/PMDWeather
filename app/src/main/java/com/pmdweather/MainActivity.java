@@ -14,6 +14,7 @@
     import android.view.View;
     import android.widget.ImageView;
     import android.widget.TextView;
+    import android.widget.Button;
     import android.widget.Toast;
     import androidx.activity.EdgeToEdge;
     import androidx.activity.result.ActivityResultLauncher;
@@ -65,10 +66,16 @@
                 registerReceiver(locationUpdateReceiver, locationFilter);
                 IntentFilter weatherFilter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
                 registerReceiver(weatherUpdateReceiver,weatherFilter);
-                
             }
             // set background to the time
             setBackgroundTime();
+            Button buttonHistory = findViewById(R.id.buttonHistory);
+            buttonHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //todo movernos a otra pagina
+                }
+            });
         }
 
 //////// GESTION DE PERMISOS

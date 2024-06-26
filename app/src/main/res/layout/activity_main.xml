@@ -101,19 +101,18 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/mapButton"-->
-<!--        android:layout_width="50dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:src="@drawable/map_image"-->
-<!--        android:scaleType="fitCenter"-->
-<!--        android:adjustViewBounds="true"-->
-<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--        android:contentDescription="@string/select_location"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:layout_margin="16dp"-->
-<!--        />-->
+    <Button
+        android:id="@+id/buttonHistory"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/map_image"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
