@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
 
+    <!-- Background -->
     <ImageView
         android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
@@ -22,21 +23,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- Botón calendar -->
+    <ImageButton
+        android:id="@+id/calendarButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/calendar"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/select_calendar"
+        app:layout_constraintTop_toTopOf="@id/backgroundImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"
+    />
+
+    <!-- Nombre de la ciudad -->
     <TextView
         android:id="@+id/cityNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
         android:text=".................."
         android:textColor="#FFFFFF"
         android:textSize="24sp"
+        android:background="@drawable/button_background"
+        android:padding="8dp"
+        android:onClick="openCitySelectionPage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Icono del weather -->
     <ImageView
         android:id="@+id/weatherImageView"
         android:layout_width="130dp"
@@ -47,6 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp" />
 
+    <!-- Info temperatura -->
     <TextView
         android:id="@+id/temperatureTextView"
         android:layout_width="wrap_content"
@@ -62,6 +85,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center" />
 
+    <!-- Additional info -->
     <TextView
         android:id="@+id/additionalInfoTextView"
         android:layout_width="wrap_content"
@@ -77,7 +101,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center" />
 
-
+    <!-- Weekly -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,18 +125,19 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <Button
-        android:id="@+id/buttonHistory"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/map_image"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"
-        />
+<!--    <ImageButton-->
+<!--        android:id="@+id/mapButton"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:src="@drawable/map_image"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--        android:contentDescription="@string/select_location"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_margin="16dp"-->
+<!--        />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
