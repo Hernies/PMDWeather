@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.pmdweather.services.ApiService;
 import com.pmdweather.services.DatabaseService;
 import com.pmdweather.services.LocationService;
+import com.pmdweather.services.NotificationService;
 
 
 // La clase principal de nuestra app, inicia todos los servicios de fondo

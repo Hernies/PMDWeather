@@ -33,7 +33,7 @@ public class ApiService extends Service{
     public void onCreate(){
         super.onCreate();
         weatherCaller = new WeatherCall();
-        IntentFilter filter = new IntentFilter("com.pmdweather.LOCATION_UPDATE");
+        IntentFilter filter = new IntentFilter("com.pmdweather.LOCATION_UPDATE_MAIN");
         registerReceiver(locationUpdateReceiver, filter);
         System.out.println("api Started");
     }

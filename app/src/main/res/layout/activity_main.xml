@@ -108,13 +108,16 @@
         android:layout_marginTop="60dp"
         app:layout_constraintTop_toBottomOf="@id/additionalInfoTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/hourlyForecastContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp">
+
             <!-- Los elementos de forecast se añadirán dinámicamente aquí -->
         </LinearLayout>
     </HorizontalScrollView>

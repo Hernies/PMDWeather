@@ -20,8 +20,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
@@ -47,9 +47,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    // Notifications dependencies
-    implementation("com.android.support:appcompat-v7:28.0.0")
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.work:work-runtime-ktx:2.7.0")
 }

@@ -13,6 +13,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,12 +55,15 @@ public class MainActivity extends AppCompatActivity {
     private Integer time;
     private Weather weatherData;
     private String cityName;
-
+    private boolean exploring=false;//variable used for exploring the
+    private boolean acceptLocationUpdates=true;
     public static final String ACTION_HISTORY_UPDATE = "com.pmdweather.HISTORY_UPDATE";
+    public static final String EXTRA_LATITUDE = "com.pmdweather.EXTRA_LATITUDE";
+    public static final String EXTRA_LONGITUDE = "com.pmdweather.EXTRA_LONGITUDE";
 
+    public static final String ACTION_LOCATION_UPDATE = "com.pmdweather.LOCATION_UPDATE_MAIN";
     public static final String EXTRA_HISTORY_WEATHER_DATA = "com.pmdweather.HISTORY_WEATHER_DATA";
     public static final String EXTRA_CITY_NAME = "com.pmdweater.HISTORY_CITY_NAME";
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +75,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         if (!checkLocationPermissions()) {
             requestLocationPermission();
             System.out.println("services not started, insufficient permissions");
-        } 
-
-        else {
+        } else {
             System.out.println("starting services");
             ((WeatherApp) getApplication()).startServices();
             IntentFilter locationFilter = new IntentFilter("com.pmdweather.LOCATION_UPDATE");
@@ -85,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
             IntentFilter weatherFilter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
             registerReceiver(weatherUpdateReceiver, weatherFilter);
         }
-        
-
        //comprobar permisos
        if (!checkNotificationPermission()){
             requestNotificationPermission();
@@ -103,13 +102,24 @@ public class MainActivity extends AppCompatActivity {
         buttonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-                startActivity(intent);
+                Intent cityname = new Intent(MainActivity.this, HistoryActivity.class);
+                cityname.putExtra("CITY_NAME", cityName);
+                startActivity(cityname);
+            }
+        });
+        Button citySelection = findViewById(R.id.cityNameTextView);
+        citySelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cityname = new Intent(MainActivity.this, CitySelectionActivity.class);
+                cityname.putExtra("CITY_NAME", cityName);
+                exploring=true;
+                startActivity(cityname);
             }
         });
     }
 
-    //////// GESTION DE PERMISOS
+//////// GESTION DE PERMISOS
      private boolean checkNotificationPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
     }
@@ -157,15 +167,29 @@ public class MainActivity extends AppCompatActivity {
     }
 ////////
 
-    //////// RECIBIDORES DE DATOS (ubicacion y datos metereologicos)
-    private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            double latitude = intent.getDoubleExtra("latitude", 0.0);
-            double longitude = intent.getDoubleExtra("longitude", 0.0);
+//////// RECIBIDORES DE DATOS (ubicacion y datos metereologicos)
+private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        double latitude;
+        double longitude;
+
+        if (acceptLocationUpdates) {
+            if (!exploring) {
+                latitude = intent.getDoubleExtra("latitude", 0.0);
+                longitude = intent.getDoubleExtra("longitude", 0.0);
+            } else {
+                latitude = intent.getDoubleExtra("LATITUDE", 0.0);
+                longitude = intent.getDoubleExtra("LONGITUDE", 0.0);
+                exploring = intent.getBooleanExtra("EXPLORING", true);
+                acceptLocationUpdates=false;
+            }
             getCityName(latitude, longitude);
+            System.out.println("latitude " + latitude);
+            System.out.println("longitude " + longitude);
         }
-    };
+    }
+};
     private final BroadcastReceiver weatherUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -206,8 +230,7 @@ public class MainActivity extends AppCompatActivity {
     }
 ////////
 
-    //////// METER DATOS EN LA PAGINA
-    // todo introducir datos a elementos xml
+//////// METER DATOS EN LA PAGINA
     @SuppressLint("DefaultLocale")
     private void setValuesforPage() {
         // seleccionamos el elemento de texto del xml
@@ -222,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         // weather.getCurrent().getWeatherCode()
 
         // Icono Weather
-        System.out.println("weatherCode: " + weatherData.getCurrent().getWeatherCode());
+        // System.out.println("weatherCode: " + weatherData.getCurrent().getWeatherCode());
         int weathercode = weatherData.getCurrent().getWeatherCode();
         ImageView weatherImageView = findViewById(R.id.weatherImageView);
         setImageFromImageCode(weathercode,weatherImageView);
@@ -245,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < weatherData.getHourly().getTime().size(); i++) {
             LinearLayout hourlyLayout = new LinearLayout(this);
             hourlyLayout.setOrientation(LinearLayout.VERTICAL);
-            hourlyLayout.setPadding(10, 10, 10, 10);
 
             // Text view para la hora
             TextView timeScroll = new TextView(this);
@@ -256,6 +278,9 @@ public class MainActivity extends AppCompatActivity {
             // Crear el imageView
             ImageView weatherIconScroll = new ImageView(this);
             setImageFromImageCode(weatherData.getHourly().getWeatherCode().get(i),weatherIconScroll);
+            LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(70,70);
+            imageParams.gravity = Gravity.CENTER;
+            weatherIconScroll.setLayoutParams(imageParams);
 
             // Temperatura
             TextView temperatureScroll = new TextView(this);
@@ -285,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 cityName = addresses.get(0).getLocality();
+                System.out.println(cityName);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -3,4 +3,5 @@
     <string name="select_weeks">Select Weeks</string>
     <string name="select_calendar">Select Date</string>
     <string name="delete_city">Delete from list</string>
+    <string name="search">Search</string>
 </resources>

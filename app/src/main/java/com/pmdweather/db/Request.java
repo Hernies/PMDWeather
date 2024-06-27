@@ -11,11 +11,9 @@ public class Request implements Serializable {
     private int numWeeks;
 
     // Constructor
-    public Request(String cityName, Date date, boolean days, boolean weeks, int numWeeks) {
+    public Request(String cityName, Date date, int numWeeks) {
         this.cityName = cityName;
         this.date = date;
-        this.days = days;
-        this.weeks = weeks;
         this.numWeeks = numWeeks;
     }
 
@@ -40,17 +38,10 @@ public class Request implements Serializable {
         this.date = date;
     }
 
-    public boolean isDays() {
-        return days;
-    }
-
     public void setDays(boolean days) {
         this.days = days;
     }
 
-    public boolean isWeeks() {
-        return weeks;
-    }
 
     public void setWeeks(boolean weeks) {
         this.weeks = weeks;
@@ -69,8 +60,6 @@ public class Request implements Serializable {
         return "Request{" +
                 "cityName='" + cityName + '\'' +
                 ", date=" + date +
-                ", days=" + days +
-                ", weeks=" + weeks +
                 ", numWeeks=" + numWeeks +
                 '}';
     }

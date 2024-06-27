@@ -9,9 +9,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.pmdweather.api.Weather;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class WeatherDAO {
     private SQLiteDatabase database;
     private WeatherDatabaseHelper dbHelper;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public WeatherDAO(Context context) {
         dbHelper = new WeatherDatabaseHelper(context);
@@ -27,11 +33,112 @@ public class WeatherDAO {
         Log.d("WeatherDAO", "Database closed");
     }
 
-    public Response executeRequest(Request request){
-        //todo exectute request and return response
-        return null;
+    public Response executeRequest(Request request) {
+        Response response = new Response();
+        long cityId = getCityId(request.getCityName());
+        if (cityId == -1) {
+            Log.d("WeatherDAO", "City not found");
+            return response; // Return empty response if city not found
+        }
+
+        Date startDate = request.getDate();
+        int numWeeks = request.getNumWeeks();
+        Date endDate = addWeeksToDate(startDate, numWeeks);
+
+        // Query for daily data
+        Response.Daily daily = queryDailyData(cityId, startDate, endDate);
+        response.setDaily(daily);
+
+        return response;
     }
-    
+
+    private long getCityId(String cityName) {
+        Cursor cursor = database.query(
+                WeatherDatabaseHelper.TABLE_CITIES,
+                new String[]{WeatherDatabaseHelper.COLUMN_CITY_ID},
+                WeatherDatabaseHelper.COLUMN_CITY_NAME + " = ?",
+                new String[]{cityName},
+                null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            @SuppressLint("Range") long cityId = cursor.getLong(cursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_CITY_ID));
+            cursor.close();
+            return cityId;
+        }
+
+        return -1;
+    }
+
+    private Date addWeeksToDate(Date date, int weeks) {
+        long msPerWeek = 1000L * 60 * 60 * 24 * 7;
+        return new Date(date.getTime() + (weeks * msPerWeek));
+    }
+
+    private Response.Daily queryDailyData(long cityId, Date startDate, Date endDate) {
+        Response.Daily daily = new Response.Daily();
+
+        List<String> timeList = new ArrayList<>();
+        List<Integer> weatherCodeList = new ArrayList<>();
+        List<Double> temperatureMaxList = new ArrayList<>();
+        List<Double> temperatureMinList = new ArrayList<>();
+        List<Double> apparentTemperatureMaxList = new ArrayList<>();
+        List<Double> apparentTemperatureMinList = new ArrayList<>();
+
+        String start = dateFormat.format(startDate);
+        String end = dateFormat.format(endDate);
+
+        Cursor cursor = database.query(
+                WeatherDatabaseHelper.TABLE_WEEKLY,
+                new String[]{WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME, WeatherDatabaseHelper.COLUMN_WEEKLY_ID},
+                WeatherDatabaseHelper.COLUMN_WEEKLY_CITY_ID + " = ? AND " + WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME + " BETWEEN ? AND ?",
+                new String[]{String.valueOf(cityId), start, end},
+                null, null, WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME + " ASC");
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") String datetime = cursor.getString(cursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME));
+                @SuppressLint("Range") long weeklyId = cursor.getLong(cursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_WEEKLY_ID));
+
+                timeList.add(datetime);
+
+                Cursor dataCursor = database.query(
+                        WeatherDatabaseHelper.TABLE_WEEKLY_VALUES,
+                        new String[]{
+                                WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_WEATHER_CODE,
+                                WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_TEMPERATURE,
+                                WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_APPARENT_TEMP
+                        },
+                        WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_WEEKLY_ID + " = ?",
+                        new String[]{String.valueOf(weeklyId)},
+                        null, null, null);
+
+                if (dataCursor != null && dataCursor.moveToFirst()) {
+                    @SuppressLint("Range") int weatherCode = dataCursor.getInt(dataCursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_WEATHER_CODE));
+                    @SuppressLint("Range") double temperature = dataCursor.getDouble(dataCursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_TEMPERATURE));
+                    @SuppressLint("Range") double apparentTemp = dataCursor.getDouble(dataCursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_WEEKLY_VALUES_APPARENT_TEMP));
+
+                    weatherCodeList.add(weatherCode);
+                    temperatureMaxList.add(temperature);
+                    temperatureMinList.add(temperature);
+                    apparentTemperatureMaxList.add(apparentTemp);
+                    apparentTemperatureMinList.add(apparentTemp);
+
+                    dataCursor.close();
+                }
+            }
+            cursor.close();
+        }
+
+        daily.setTime(timeList);
+        daily.setWeatherCode(weatherCodeList);
+        daily.setTemperature2mMax(temperatureMaxList);
+        daily.setTemperature2mMin(temperatureMinList);
+        daily.setApparentTemperatureMax(apparentTemperatureMaxList);
+        daily.setApparentTemperatureMin(apparentTemperatureMinList);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        return daily;
+    }
+
     public void insertWeather(Weather weather, String cityName) {
         long cityId = getCityId(cityName);
 
@@ -51,23 +158,6 @@ public class WeatherDAO {
                 insertWeeklyWeatherData(cityId, weather.getDaily());
             }
         }
-    }
-
-    private long getCityId(String cityName) {
-        Cursor cursor = database.query(
-                WeatherDatabaseHelper.TABLE_CITIES,
-                new String[]{WeatherDatabaseHelper.COLUMN_CITY_ID},
-                WeatherDatabaseHelper.COLUMN_CITY_NAME + " = ?",
-                new String[]{cityName},
-                null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            @SuppressLint("Range") long cityId = cursor.getLong(cursor.getColumnIndex(WeatherDatabaseHelper.COLUMN_CITY_ID));
-            cursor.close();
-            return cityId;
-        }
-
-        return -1;
     }
 
     private boolean isHourlyDataExists(long cityId, String datetime) {
@@ -150,12 +240,5 @@ public class WeatherDAO {
         } finally {
             database.endTransaction();
         }
-    }
-
-    public Cursor getAllWeatherData() {
-        Cursor cursor = database.query(WeatherDatabaseHelper.TABLE_CITIES,
-                null, null, null, null, null, null);
-        Log.d("WeatherDAO", "Fetched data count: " + cursor.getCount());
-        return cursor;
     }
 }

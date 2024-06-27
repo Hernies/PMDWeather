@@ -33,8 +33,8 @@ public class DatabaseService extends Service {
         weatherDAO.open();
         IntentFilter filter = new IntentFilter("com.pmdweather.HISTORY_UPDATE");
         registerReceiver(updateHistoryReceiver, filter);
-        IntentFilter send = new IntentFilter("com.pmdweather.GET_HISTORY");
-
+        IntentFilter send = new IntentFilter("com.pmdweather.REQUEST_HISTORY");
+        registerReceiver(handleHistoryRequest,send);
     }
 
     private final BroadcastReceiver updateHistoryReceiver = new BroadcastReceiver() {
@@ -47,7 +47,7 @@ public class DatabaseService extends Service {
                 if (weather != null && cityName != null) {
                     if (weather.getDaily() != null && weather.getHourly() != null) {
                         storeWeatherData(weather,cityName);
-                        System.out.println("Weather data saved for city: " + cityName);
+                        // System.out.println("Weather data saved for city: " + cityName);
                     } else if (weather.getDaily() != null){
                         System.out.println( "Weather weekly is null");
                     }
@@ -70,7 +70,9 @@ public class DatabaseService extends Service {
                 if (request != null){
                     //if the request isnt null, prepare the broadcast and send over to history activity
                     Intent response = new Intent(ACTION_RESPONSE_HISTORY);
+                    System.out.println("                request Received!!!!!!!!!!!");
                     response.putExtra(EXTRA_RESPONSE_BODY,executeRequest(request));
+                    sendBroadcast(response);
                 }
             }
 
