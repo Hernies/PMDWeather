@@ -33,12 +33,22 @@ import com.pmdweather.api.Weather;
 import com.pmdweather.services.ApiService;
 import com.pmdweather.services.NotificationService;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import java.time.LocalTime;
 
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Integer time;
@@ -75,6 +85,17 @@ public class MainActivity extends AppCompatActivity {
             IntentFilter weatherFilter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
             registerReceiver(weatherUpdateReceiver, weatherFilter);
         }
+        
+
+       //comprobar permisos
+       if (!checkNotificationPermission()){
+            requestNotificationPermission();
+       } else {
+            int[] programadas = {8,12,16,20};
+            for(int hora: programadas){
+                scheduleNotification(hora);
+            }
+       }
         // set background to the time
         setBackgroundTime();
 
@@ -86,12 +107,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Mostar notificaciones
-        showTestNotification();
     }
 
     //////// GESTION DE PERMISOS
+     private boolean checkNotificationPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestNotificationPermission() {
+        ActivityResultLauncher<String[]> notificationPermissionRequest =
+                registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                    Boolean postNotificationsGranted = result.getOrDefault(Manifest.permission.POST_NOTIFICATIONS, false);
+                    if (postNotificationsGranted != null && postNotificationsGranted) {
+                        System.out.println("POST_NOTIFICATIONS Granted");
+                    } else {
+                        Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        notificationPermissionRequest.launch(new String[]{
+                Manifest.permission.POST_NOTIFICATIONS
+        });
+    }
+
+
     private boolean checkLocationPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -147,6 +185,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void scheduleNotification(int hour) {
+        Intent intent = new Intent(this, NotificationService.class);
+        intent.putExtra("title", "PMDWeather");
+        intent.putExtra("message", "check your weather predictions for "+cityName);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour); 
+        calendar.set(Calendar.MINUTE, 0); //
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+    }
 ////////
 
     //////// METER DATOS EN LA PAGINA
@@ -167,7 +224,8 @@ public class MainActivity extends AppCompatActivity {
         // Icono Weather
         System.out.println("weatherCode: " + weatherData.getCurrent().getWeatherCode());
         int weathercode = weatherData.getCurrent().getWeatherCode();
-        setImageFromImageCode(weathercode);
+        ImageView weatherImageView = findViewById(R.id.weatherImageView);
+        setImageFromImageCode(weathercode,weatherImageView);
 
 
         // Info temperatura
@@ -197,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Crear el imageView
             ImageView weatherIconScroll = new ImageView(this);
-            weatherIconScroll.setBackground(ContextCompat.getDrawable(this, R.drawable.background_evening)); // No se setear esto
+            setImageFromImageCode(weatherData.getHourly().getWeatherCode().get(i),weatherIconScroll);
 
             // Temperatura
             TextView temperatureScroll = new TextView(this);
@@ -261,66 +319,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // establece el icono en concordancia con el weathercode recibido y al momento del dia que sea
-    private void setImageFromImageCode(int imagecode) {
-        ImageView weatherImageView = findViewById(R.id.weatherImageView);
+    private void setImageFromImageCode(int imagecode, ImageView imageView) {
         Drawable weatherImage = null;
         if (imagecode == 0) {
             if (time == 2) {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.clear_night);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             } else {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.clear_day);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             }
         } else if (imagecode > 44 && imagecode <= 48) {
             if (time == 2) {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.night_rain);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             } else {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.day_rain_option_2);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             }
         } else if (imagecode > 50 && imagecode <= 65) {
             if (time == 2) {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.fog);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             } else {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.fog_option_2);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             }
         } else if (imagecode > 79 && imagecode <= 82) {
             if (time == 2) {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.night_rain);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             } else {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.day_rain_option_2);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             }
         } else if (imagecode > 94 && imagecode <= 99) {
             if (time == 2) {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.night_rain);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             } else {
                 weatherImage = ContextCompat.getDrawable(this, R.drawable.day_rain_option_2);
-                weatherImageView.setBackground(weatherImage);
+                imageView.setBackground(weatherImage);
             }
         }
     }
 
-    private void showTestNotification() {
-        NotificationService notificationService = new NotificationService();
-        notificationService.showNotification("Test Notification", "This is a test notification");
-    }
-
-    private void setDailyWeatherNotifications(){
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        int [] hours = {6,9, 12, 15,18, 21,00};
-
-        for(int hour: hours){
-           //Implementar la logica de la mierda esta, ahora vuelvo
-        }
-    }
+   
 ////////
 }
 

@@ -36,7 +36,17 @@ public class NotificationService extends Service {
         }
     }
 
-    public void showNotification(String title, String message) {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String title = intent.getStringExtra("title");
+        String message = intent.getStringExtra("message");
+        if (title != null && message != null){
+            showNotification(title, message);
+        }
+        return START_NOT_STICKY;
+    }
+
+    private void showNotification(String title, String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
@@ -48,14 +58,6 @@ public class NotificationService extends Service {
             return;
         }
         manager.notify(1, builder.build());
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        String title = intent.getStringExtra("title");
-        String message = intent.getStringExtra("message");
-        showNotification(title, message);
-        return START_NOT_STICKY;
     }
 
     @Override
