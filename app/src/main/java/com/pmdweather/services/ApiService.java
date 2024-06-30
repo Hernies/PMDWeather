@@ -42,6 +42,7 @@ public class ApiService extends Service{
         public void onReceive(Context context, Intent intent) {
             double latitude = intent.getDoubleExtra("latitude", 0.0);
             double longitude = intent.getDoubleExtra("longitude", 0.0);
+            System.out.println("fetching weather data");
             fetchWeatherData(latitude, longitude);
             
         }

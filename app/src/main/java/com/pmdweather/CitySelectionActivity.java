@@ -45,7 +45,7 @@ public class CitySelectionActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location currentLocation = getCurrentLocation();
         if (currentLocation != null) {
-            String currentLocationString = "Current Location: " + currentLocation.getLatitude() + ", " + currentLocation.getLongitude();
+            String currentLocationString = "Current Real Location (" + getIntent().getStringExtra("CITY_NAME")+"): "+ currentLocation.getLatitude() + ", " + currentLocation.getLongitude();
             cityList.add(currentLocationString);
         } else {
             cityList.add("Current Location: Unknown");
@@ -55,6 +55,7 @@ public class CitySelectionActivity extends AppCompatActivity {
         searchCityEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
@@ -91,9 +92,35 @@ public class CitySelectionActivity extends AppCompatActivity {
                         resultIntent.putExtra("LONGITUDE", longitude);
                         resultIntent.putExtra("EXPLORING", id != 0);
                         sendBroadcast(resultIntent);
+                        System.out.println("city selection broadcast sent");
                         finish();
                     }
                 });
+            }
+        });
+
+        cityListView.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedCity = cityAdapter.getItem(position);
+            if (selectedCity != null) {
+                // Extract latitude and longitude from the selected item
+                String[] parts = selectedCity.split(":")[1].split(",");
+                double latitude = Double.parseDouble(parts[0].trim());
+                double longitude = Double.parseDouble(parts[1].trim());
+                System.out.println("CitySel Latitude "+latitude);
+                System.out.println("CitySel Longitude "+longitude);
+
+
+                String locationString = "Selected City: " + selectedCity + " (" + latitude + ", " + longitude + ")";
+                Toast.makeText(CitySelectionActivity.this, locationString, Toast.LENGTH_SHORT).show();
+
+                // Pass the selected location back to the main activity
+                Intent resultIntent = new Intent("com.pmdweather.EXPLORE");
+                resultIntent.putExtra("LATITUDE", latitude);
+                resultIntent.putExtra("LONGITUDE", longitude);
+                resultIntent.putExtra("EXPLORING", id != 0);
+                sendBroadcast(resultIntent);
+                System.out.println("city selection broadcast sent");
+                finish();
             }
         });
 

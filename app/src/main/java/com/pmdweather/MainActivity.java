@@ -55,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private Integer time;
     private Weather weatherData;
     private String cityName;
-    private boolean exploring=false;//variable used for exploring the
+    private Double latitude;
+    private Double longitude;
+    private Double ogLat;
+    private Double ogLon;
     private boolean acceptLocationUpdates=true;
     public static final String ACTION_HISTORY_UPDATE = "com.pmdweather.HISTORY_UPDATE";
     public static final String EXTRA_LATITUDE = "com.pmdweather.EXTRA_LATITUDE";
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(locationUpdateReceiver, locationFilter);
             IntentFilter weatherFilter = new IntentFilter("com.pmdweather.WEATHER_UPDATE");
             registerReceiver(weatherUpdateReceiver, weatherFilter);
+            IntentFilter citySelFilter = new IntentFilter("com.pmdweather.EXPLORE");
+            registerReceiver(locationCitySel,citySelFilter);
         }
        //comprobar permisos
        if (!checkNotificationPermission()){
@@ -102,18 +107,18 @@ public class MainActivity extends AppCompatActivity {
         buttonHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cityname = new Intent(MainActivity.this, HistoryActivity.class);
-                cityname.putExtra("CITY_NAME", cityName);
-                startActivity(cityname);
+                Intent history = new Intent(MainActivity.this, HistoryActivity.class);
+                history.putExtra("CITY_NAME", cityName);
+                startActivity(history);
             }
         });
         Button citySelection = findViewById(R.id.cityNameTextView);
         citySelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cityname = new Intent(MainActivity.this, CitySelectionActivity.class);
-                cityname.putExtra("CITY_NAME", cityName);
-                exploring=true;
+                Intent cityname = new Intent(MainActivity.this, CitySelectionActivity.class);;
+                cityname.putExtra("CITY_NAME", returnCityName(ogLat,ogLon));
+                acceptLocationUpdates=false;
                 startActivity(cityname);
             }
         });
@@ -171,25 +176,41 @@ public class MainActivity extends AppCompatActivity {
 private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-        double latitude;
-        double longitude;
-
         if (acceptLocationUpdates) {
-            if (!exploring) {
-                latitude = intent.getDoubleExtra("latitude", 0.0);
-                longitude = intent.getDoubleExtra("longitude", 0.0);
-            } else {
-                latitude = intent.getDoubleExtra("LATITUDE", 0.0);
-                longitude = intent.getDoubleExtra("LONGITUDE", 0.0);
-                exploring = intent.getBooleanExtra("EXPLORING", true);
-                acceptLocationUpdates=false;
+            latitude = intent.getDoubleExtra("latitude", 0.0);
+            longitude = intent.getDoubleExtra("longitude", 0.0);
+            ogLat = latitude;
+            ogLon = longitude;
+            getCityName(latitude, longitude);
+            System.out.println("latitude " + latitude);
+            System.out.println("longitude " + longitude);
+            Intent apiRequest = new Intent(ACTION_LOCATION_UPDATE);
+            apiRequest.putExtra(EXTRA_LATITUDE, latitude);
+            apiRequest.putExtra(EXTRA_LONGITUDE, longitude);
+            sendBroadcast(apiRequest);
+        }
+    }
+};
+    private final BroadcastReceiver locationCitySel= new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            double newLatitude = intent.getDoubleExtra("LATITUDE", 0.0);
+            double newLongitude = intent.getDoubleExtra("LONGITUDE", 0.0);
+            if (newLongitude != 0.0 && newLatitude != 0.0){
+                latitude = newLatitude;
+                longitude = newLongitude;
+            } else if (ogLat== newLatitude && ogLon == newLongitude ) {
+                acceptLocationUpdates=true;
             }
             getCityName(latitude, longitude);
             System.out.println("latitude " + latitude);
             System.out.println("longitude " + longitude);
+            Intent apiRequest = new Intent(ACTION_LOCATION_UPDATE);
+            apiRequest.putExtra(EXTRA_LATITUDE,latitude);
+            apiRequest.putExtra(EXTRA_LONGITUDE,longitude);
+            sendBroadcast(apiRequest);
         }
-    }
-};
+    };
     private final BroadcastReceiver weatherUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -315,6 +336,19 @@ private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver()
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private String returnCityName(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        String cityName="";
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                 cityName = addresses.get(0).getLocality();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cityName;
     }
 
     //Establece el fondo de pantalla en funcion del momento del dia que sea
