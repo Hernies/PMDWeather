@@ -18,6 +18,17 @@ import com.pmdweather.db.WeatherDAO;
 import com.pmdweather.db.Request;
 
 
+
+
+
+
+
+
+
+
+
+
+
 import java.util.Arrays;
 
 public class DatabaseService extends Service {
@@ -70,7 +81,6 @@ public class DatabaseService extends Service {
                 if (request != null){
                     //if the request isnt null, prepare the broadcast and send over to history activity
                     Intent response = new Intent(ACTION_RESPONSE_HISTORY);
-                    System.out.println("                request Received!!!!!!!!!!!");
                     response.putExtra(EXTRA_RESPONSE_BODY,executeRequest(request));
                     sendBroadcast(response);
                 }

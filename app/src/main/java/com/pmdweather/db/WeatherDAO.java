@@ -8,7 +8,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.pmdweather.api.Weather;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +16,7 @@ import java.util.List;
 public class WeatherDAO {
     private SQLiteDatabase database;
     private WeatherDatabaseHelper dbHelper;
+    @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public WeatherDAO(Context context) {
@@ -90,7 +90,7 @@ public class WeatherDAO {
         Cursor cursor = database.query(
                 WeatherDatabaseHelper.TABLE_WEEKLY,
                 new String[]{WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME, WeatherDatabaseHelper.COLUMN_WEEKLY_ID},
-                WeatherDatabaseHelper.COLUMN_WEEKLY_CITY_ID + " = ? AND " + WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME + " BETWEEN ? AND ?",
+                WeatherDatabaseHelper.COLUMN_WEEKLY_CITY_ID + " = ? AND " + WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME + " BETWEEN ? AND ?", //<----- HERE
                 new String[]{String.valueOf(cityId), start, end},
                 null, null, WeatherDatabaseHelper.COLUMN_WEEKLY_DATETIME + " ASC");
 
@@ -135,9 +135,10 @@ public class WeatherDAO {
         daily.setTemperature2mMin(temperatureMinList);
         daily.setApparentTemperatureMax(apparentTemperatureMaxList);
         daily.setApparentTemperatureMin(apparentTemperatureMinList);
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
         return daily;
     }
+
 
     public void insertWeather(Weather weather, String cityName) {
         long cityId = getCityId(cityName);

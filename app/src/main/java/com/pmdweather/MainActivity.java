@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(history);
             }
         });
-        Button citySelection = findViewById(R.id.cityNameTextView);
+        ImageButton citySelection = findViewById(R.id.selectNameCity);
         citySelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

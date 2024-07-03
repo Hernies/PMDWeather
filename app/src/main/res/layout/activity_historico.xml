@@ -10,8 +10,8 @@
     <!-- Calendario para seleccionar el día -->
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="320dp"
-        android:layout_height="220dp"
+        android:layout_width="330dp"
+        android:layout_height="342dp"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@id/weeksEditText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,13 +20,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Campo para seleccionar el número de semanas -->
-
-    <!-- Lista para mostrar los días con el clima -->
-
     <EditText
         android:id="@+id/weeksEditText"
         android:layout_width="187dp"
-        android:layout_height="43dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
@@ -45,15 +42,15 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="407dp"
         android:hint="@string/search"
-        app:layout_constraintBottom_toBottomOf="@+id/historicoListView"
+        app:layout_constraintBottom_toBottomOf="@+id/historicoScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/weeksEditText"
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ListView
-        android:id="@+id/historicoListView"
+    <ScrollView
+        android:id="@+id/historicoScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
@@ -61,6 +58,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weeksEditText" />
+        app:layout_constraintTop_toBottomOf="@id/weeksEditText">
+
+        <LinearLayout
+            android:id="@+id/historicoListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
