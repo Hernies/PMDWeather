@@ -40,9 +40,9 @@ public class ApiService extends Service{
     private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            double latitude = intent.getDoubleExtra("latitude", 0.0);
-            double longitude = intent.getDoubleExtra("longitude", 0.0);
-            System.out.println("fetching weather data");
+            double latitude = intent.getDoubleExtra("com.pmdweather.EXTRA_LATITUDE", 0.0);
+            double longitude = intent.getDoubleExtra("com.pmdweather.EXTRA_LONGITUDE", 0.0);
+            System.out.println("fetching weather data: " + latitude +", "+ longitude);
             fetchWeatherData(latitude, longitude);
             
         }

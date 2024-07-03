@@ -203,8 +203,8 @@ private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver()
                 acceptLocationUpdates=true;
             }
             getCityName(latitude, longitude);
-            System.out.println("latitude " + latitude);
-            System.out.println("longitude " + longitude);
+            System.out.println("citySEllatitude " + latitude);
+            System.out.println("citySEllongitude " + longitude);
             Intent apiRequest = new Intent(ACTION_LOCATION_UPDATE);
             apiRequest.putExtra(EXTRA_LATITUDE,latitude);
             apiRequest.putExtra(EXTRA_LONGITUDE,longitude);
@@ -252,74 +252,80 @@ private final BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver()
 ////////
 
 //////// METER DATOS EN LA PAGINA
-    @SuppressLint("DefaultLocale")
-    private void setValuesforPage() {
-        // seleccionamos el elemento de texto del xml
-        TextView cityNameElement = findViewById(R.id.cityNameTextView);
-        // introducimos el nombre de la ciudad (guardado en el string cityNam)
-        cityNameElement.setText(cityName);
+@SuppressLint("DefaultLocale")
+private void setValuesforPage() {
+    // Clear values first
 
-        // continua con el resto de elementos de la pagina
-        // empieza por los datos de temperatura y los iconos
-        // los datos estan en el objeto weather (es accesible dentro de la clase)
-        // para extraer algun dato haz por ejemplo:
-        // weather.getCurrent().getWeatherCode()
+    // Clear city name
+    TextView cityNameElement = findViewById(R.id.cityNameTextView);
+    cityNameElement.setText("");
 
-        // Icono Weather
-        // System.out.println("weatherCode: " + weatherData.getCurrent().getWeatherCode());
-        int weathercode = weatherData.getCurrent().getWeatherCode();
-        ImageView weatherImageView = findViewById(R.id.weatherImageView);
-        setImageFromImageCode(weathercode,weatherImageView);
+    // Clear weather icon
+    ImageView weatherImageView = findViewById(R.id.weatherImageView);
+    weatherImageView.setImageDrawable(null);
 
+    // Clear temperature info
+    TextView temperatureTextView = findViewById(R.id.temperatureTextView);
+    temperatureTextView.setText("");
 
-        // Info temperatura
-        TextView temperatureTextView = findViewById(R.id.temperatureTextView);
-        double temperature = weatherData.getCurrent().getApparentTemperature();
-        temperatureTextView.setText(String.format("%.2f", temperature));
+    // Clear additional info
+    TextView humidityTextView = findViewById(R.id.additionalInfoTextView);
+    humidityTextView.setText("");
 
-        // Info Adiccional
-        TextView humidityTextView = findViewById(R.id.additionalInfoTextView);
-        humidityTextView.setText(String.valueOf(weatherData.getCurrent().getRelativeHumidity2m()));
+    // Clear hourly forecast container
+    LinearLayout hourlyForecastContainer = findViewById(R.id.hourlyForecastContainer);
+    hourlyForecastContainer.removeAllViews();
 
+    // Set new values
 
-        // HorizontalScrollView y su contenedor
-        LinearLayout hourlyForecastContainer = findViewById(R.id.hourlyForecastContainer);
+    // Set city name
+    cityNameElement.setText(cityName);
 
-        // Agregamos datos dinamicamente
-        for (int i = 0; i < weatherData.getHourly().getTime().size(); i++) {
-            LinearLayout hourlyLayout = new LinearLayout(this);
-            hourlyLayout.setOrientation(LinearLayout.VERTICAL);
+    // Set weather icon
+    int weathercode = weatherData.getCurrent().getWeatherCode();
+    setImageFromImageCode(weathercode, weatherImageView);
 
-            // Text view para la hora
-            TextView timeScroll = new TextView(this);
-            timeScroll.setText(weatherData.getHourly().getTime().get(i));
-            timeScroll.setTextSize(16);
-            timeScroll.setGravity(Gravity.CENTER);
+    // Set temperature info
+    double temperature = weatherData.getCurrent().getApparentTemperature();
+    temperatureTextView.setText(String.format("%.2f", temperature));
 
-            // Crear el imageView
-            ImageView weatherIconScroll = new ImageView(this);
-            setImageFromImageCode(weatherData.getHourly().getWeatherCode().get(i),weatherIconScroll);
-            LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(70,70);
-            imageParams.gravity = Gravity.CENTER;
-            weatherIconScroll.setLayoutParams(imageParams);
+    // Set additional info
+    humidityTextView.setText(String.valueOf(weatherData.getCurrent().getRelativeHumidity2m()));
 
-            // Temperatura
-            TextView temperatureScroll = new TextView(this);
-            temperatureScroll.setText(String.format("%.2f", weatherData.getHourly().getApparentTemperature().get(i)));
-            temperatureScroll.setTextSize(16);
-            temperatureScroll.setGravity(Gravity.CENTER);
+    // Set hourly forecast data
+    for (int i = 0; i < weatherData.getHourly().getTime().size(); i++) {
+        LinearLayout hourlyLayout = new LinearLayout(this);
+        hourlyLayout.setOrientation(LinearLayout.VERTICAL);
 
-            //añadir elementos al layout
-            hourlyLayout.addView(timeScroll);
-            hourlyLayout.addView(weatherIconScroll);
-            hourlyLayout.addView(temperatureScroll);
+        // Text view for time
+        TextView timeScroll = new TextView(this);
+        timeScroll.setText(weatherData.getHourly().getTime().get(i));
+        timeScroll.setTextSize(16);
+        timeScroll.setGravity(Gravity.CENTER);
 
-            //añadir layout al contenedor
-            hourlyForecastContainer.addView(hourlyLayout);
+        // Create the ImageView
+        ImageView weatherIconScroll = new ImageView(this);
+        setImageFromImageCode(weatherData.getHourly().getWeatherCode().get(i), weatherIconScroll);
+        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(70, 70);
+        imageParams.gravity = Gravity.CENTER;
+        weatherIconScroll.setLayoutParams(imageParams);
 
-        }
+        // Temperature
+        TextView temperatureScroll = new TextView(this);
+        temperatureScroll.setText(String.format("%.2f", weatherData.getHourly().getApparentTemperature().get(i)));
+        temperatureScroll.setTextSize(16);
+        temperatureScroll.setGravity(Gravity.CENTER);
 
+        // Add elements to layout
+        hourlyLayout.addView(timeScroll);
+        hourlyLayout.addView(weatherIconScroll);
+        hourlyLayout.addView(temperatureScroll);
+
+        // Add layout to container
+        hourlyForecastContainer.addView(hourlyLayout);
     }
+}
+
 ////////
 
 
