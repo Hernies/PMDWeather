@@ -287,7 +287,7 @@ private void setValuesforPage() {
 
     // Set temperature info
     double temperature = weatherData.getCurrent().getApparentTemperature();
-    temperatureTextView.setText(String.format("%.2f", temperature));
+    temperatureTextView.setText(String.format("%.1f", temperature)+"°C");
 
     // Set additional info
     humidityTextView.setText(String.valueOf(weatherData.getCurrent().getRelativeHumidity2m()));
@@ -299,7 +299,7 @@ private void setValuesforPage() {
 
         // Text view for time
         TextView timeScroll = new TextView(this);
-        timeScroll.setText(weatherData.getHourly().getTime().get(i));
+        timeScroll.setText(weatherData.getHourly().getTime().get(i)+":00");
         timeScroll.setTextSize(16);
         timeScroll.setGravity(Gravity.CENTER);
 
@@ -312,7 +312,7 @@ private void setValuesforPage() {
 
         // Temperature
         TextView temperatureScroll = new TextView(this);
-        temperatureScroll.setText(String.format("%.2f", weatherData.getHourly().getApparentTemperature().get(i)));
+        temperatureScroll.setText(String.format("%.1f", weatherData.getHourly().getApparentTemperature().get(i))+"°C");
         temperatureScroll.setTextSize(16);
         temperatureScroll.setGravity(Gravity.CENTER);
 
